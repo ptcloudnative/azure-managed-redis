@@ -59,7 +59,7 @@ flowchart LR
     C --> D["Azure Managed Redis"]
 ```
 
-## 3. Διαστασιολόγηση, Διαθεσιμότητα και Clustering
+## 3. Διαστασιολόγηση
 
 ### Επιλογή Μεγέθους Μνήμης και Performance Tier
 
