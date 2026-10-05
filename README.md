@@ -52,65 +52,13 @@
 
 ### Αρχιτεκτονική-Στόχος
 
-```drawio
-<mxfile>
-  <diagram id="VwlBV6nUwOrfcQ2D_7Dj" name="Page-1">
-    <mxGraphModel dx="2" dy="1" grid="0" gridSize="10" guides="1" tooltips="0" connect="0" arrows="0" fold="0" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
-      <root>
-        <mxCell id="4apkjze0GYoDPhGbLS-T-0" />
-        <mxCell id="4apkjze0GYoDPhGbLS-T-1" parent="4apkjze0GYoDPhGbLS-T-0" />
-        <UserObject label="" mermaidData="{&#xa;  &quot;data&quot;: &quot;flowchart LR\r\n    A[\&quot;Εφαρμογή (App Service, AKS, VM)\&quot;] --&gt; B[\&quot;Private DNS zone\&quot;]\r\n    B --&gt; C[\&quot;Private Endpoint\&quot;]\r\n    C --&gt; D[\&quot;Azure Managed Redis\&quot;]&quot;,&#xa;  &quot;config&quot;: null&#xa;}" id="TFrtwG5Weup5RWfpUUk5-0">
-          <mxCell connectable="0" parent="4apkjze0GYoDPhGbLS-T-1" style="group;transparentBounds=1;editIcon=1;lockedGroup=0;groupPadding=10;" vertex="1">
-            <mxGeometry as="geometry" />
-          </mxCell>
-        </UserObject>
-        <UserObject label="Εφαρμογή (App Service, AKS, VM)" mermaidId="n:A" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=light-dark(#ECECFF,#1f2020);strokeColor=light-dark(#9370DB,#cccccc);fontColor=light-dark(#333333,#cccccc);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Εφαρμογή (App Service, AKS, VM)" id="4apkjze0GYoDPhGbLS-T-2">
-          <mxCell parent="TFrtwG5Weup5RWfpUUk5-0" style="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=light-dark(#ECECFF,#1f2020);strokeColor=light-dark(#9370DB,#cccccc);fontColor=light-dark(#333333,#cccccc);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
-            <mxGeometry height="54" width="301" x="10" y="10" as="geometry" />
-          </mxCell>
-        </UserObject>
-        <UserObject label="Private DNS zone" mermaidId="n:B" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=light-dark(#ECECFF,#1f2020);strokeColor=light-dark(#9370DB,#cccccc);fontColor=light-dark(#333333,#cccccc);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Private DNS zone" id="4apkjze0GYoDPhGbLS-T-3">
-          <mxCell parent="TFrtwG5Weup5RWfpUUk5-0" style="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=light-dark(#ECECFF,#1f2020);strokeColor=light-dark(#9370DB,#cccccc);fontColor=light-dark(#333333,#cccccc);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
-            <mxGeometry height="54" width="181" x="361" y="10" as="geometry" />
-          </mxCell>
-        </UserObject>
-        <UserObject label="Private Endpoint" mermaidId="n:C" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=light-dark(#ECECFF,#1f2020);strokeColor=light-dark(#9370DB,#cccccc);fontColor=light-dark(#333333,#cccccc);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Private Endpoint" id="4apkjze0GYoDPhGbLS-T-4">
-          <mxCell parent="TFrtwG5Weup5RWfpUUk5-0" style="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=light-dark(#ECECFF,#1f2020);strokeColor=light-dark(#9370DB,#cccccc);fontColor=light-dark(#333333,#cccccc);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
-            <mxGeometry height="54" width="178" x="592" y="10" as="geometry" />
-          </mxCell>
-        </UserObject>
-        <UserObject label="Azure Managed Redis" mermaidId="n:D" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=light-dark(#ECECFF,#1f2020);strokeColor=light-dark(#9370DB,#cccccc);fontColor=light-dark(#333333,#cccccc);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Azure Managed Redis" id="4apkjze0GYoDPhGbLS-T-5">
-          <mxCell parent="TFrtwG5Weup5RWfpUUk5-0" style="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=light-dark(#ECECFF,#1f2020);strokeColor=light-dark(#9370DB,#cccccc);fontColor=light-dark(#333333,#cccccc);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
-            <mxGeometry height="54" width="210" x="820" y="10" as="geometry" />
-          </mxCell>
-        </UserObject>
-        <UserObject label="" mermaidId="e:A-&gt;B#0" mermaidBaseStyle="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=1;exitY=0.5;entryX=0;entryY=0.5;" mermaidBaseValue="" id="4apkjze0GYoDPhGbLS-T-6">
-          <mxCell edge="1" parent="TFrtwG5Weup5RWfpUUk5-0" source="4apkjze0GYoDPhGbLS-T-2" style="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="4apkjze0GYoDPhGbLS-T-3">
-            <mxGeometry relative="1" as="geometry">
-              <Array as="points" />
-            </mxGeometry>
-          </mxCell>
-        </UserObject>
-        <UserObject label="" mermaidId="e:B-&gt;C#0" mermaidBaseStyle="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=1;exitY=0.5;entryX=0;entryY=0.5;" mermaidBaseValue="" id="4apkjze0GYoDPhGbLS-T-7">
-          <mxCell edge="1" parent="TFrtwG5Weup5RWfpUUk5-0" source="4apkjze0GYoDPhGbLS-T-3" style="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="4apkjze0GYoDPhGbLS-T-4">
-            <mxGeometry relative="1" as="geometry">
-              <Array as="points" />
-            </mxGeometry>
-          </mxCell>
-        </UserObject>
-        <UserObject label="" mermaidId="e:C-&gt;D#0" mermaidBaseStyle="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=1;exitY=0.5;entryX=0;entryY=0.5;" mermaidBaseValue="" id="4apkjze0GYoDPhGbLS-T-8">
-          <mxCell edge="1" parent="TFrtwG5Weup5RWfpUUk5-0" source="4apkjze0GYoDPhGbLS-T-4" style="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="4apkjze0GYoDPhGbLS-T-5">
-            <mxGeometry relative="1" as="geometry">
-              <Array as="points" />
-            </mxGeometry>
-          </mxCell>
-        </UserObject>
-      </root>
-    </mxGraphModel>
-  </diagram>
-</mxfile>
-
+```mermaid
+flowchart LR
+    A["Εφαρμογή (App Service, AKS, VM)"] --> B["Private DNS zone"]
+    B --> C["Private Endpoint"]
+    C --> D["Azure Managed Redis"]
 ```
+
 ## 3. Διαστασιολόγηση, Διαθεσιμότητα και Clustering
 
 ### Επιλογή Μεγέθους Μνήμης και Performance Tier
