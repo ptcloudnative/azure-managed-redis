@@ -95,24 +95,29 @@ $$\text{απαιτούμενη συνολική μνήμη AMR} = \frac{\text{pe
 
 ## 5. Συμβατότητα Εφαρμογών
 
-Οι περισσότερες εφαρμογές χρειάζονται αλλαγή configuration και όχι ξαναγράψιμο κώδικα.
+Οι περισσότερες εφαρμογές χρειάζονται αλλαγή configuration και όχι ξαναγράψιμο κώδικα. Κάθε εφαρμογή δοκιμάζεται στο νέο endpoint πριν το cutover.
 
-### Διαφορές Έκδοσης Redis και Πλατφόρμας
+### Δεν υποστηρίζεται πλέον και απαιτεί αλλαγή στον τρέχοντα κώδικα
 
-- Redis 6.0 → 7.4: οι βασικές δομές και εντολές παραμένουν συμβατές. Κάθε εφαρμογή δοκιμάζεται στο νέο endpoint πριν το cutover.
-- Νέες δυνατότητες (Redis Functions, sharded Pub/Sub, `HEXPIRE`) είναι προαιρετικές.
-- Δεν υποστηρίζονται keyspace notifications και manual reboot.
+- **Connection:** νέο hostname, θύρα 10000 και μόνο TLS (όχι ταυτόχρονα TLS και non-TLS).
+- **Logical databases:** μόνο database 0· το `SELECT <db>` αντικαθίσταται από prefixes στα keys.
+- **Keyspace notifications:** δεν υποστηρίζονται· αντικαθίστανται από application events, queues ή scheduler.
+- **Manual reboot:** δεν υποστηρίζεται.
+- **Multi-key εντολές, Lua και `MULTI/EXEC` (OSS clustering):** τα keys πρέπει να είναι στο ίδιο hash slot, π.χ. `{customer:42}:profile`.
+- **Client library:** απαιτείται υποστήριξη TLS, αυτόματου reconnect, Redis Cluster API και `MOVED` redirects.
+- **Δίκτυο:** δεν υποστηρίζονται VNet injection και IP-based firewall rules· η πρόσβαση γίνεται μέσω Private Endpoint.
 
-### Υποστήριξη Client Library και Cluster
+### Νέες δυνατότητες που μπορούμε να χρησιμοποιήσουμε
 
-- Έλεγχος για TLS, αυτόματο reconnect, Redis Cluster API και `MOVED` redirects.
-- Multi-key εντολές, Lua και `MULTI/EXEC` απαιτούν keys στο ίδιο hash slot, π.χ. `{customer:42}:profile`.
+- **Redis Functions** (`FUNCTION`, `FCALL`) ως εναλλακτική των Lua scripts.
+- **Sharded Pub/Sub** (`SSUBSCRIBE`) σε cluster.
+- **Expiry σε hash fields** (`HEXPIRE`).
+- **Microsoft Entra ID με managed identities** αντί για access keys.
+- **Redis modules** (RedisJSON, RedisBloom, RedisTimeSeries, RediSearch), που επιλέγονται κατά τη δημιουργία.
+- **Active geo-replication** και **persistence** σε όλα τα SKU.
+- **Scaling** μνήμης και performance tier χωρίς αλλαγή resource.
 
-### Περιορισμοί Μοντέλου Δεδομένων και Δυνατοτήτων
-
-- Μόνο database 0: το `SELECT <db>` αντικαθίσταται από prefixes στα keys.
-- Τα Redis modules (RedisJSON, RedisBloom, RedisTimeSeries, RediSearch) επιλέγονται κατά τη δημιουργία και όχι αργότερα.
-- Τα δεδομένα ταξινομούνται σε rehydratable cache, session/queue/lock και business state.
+Οι νέες δυνατότητες είναι προαιρετικές και ενεργοποιούνται μόνο μετά από δοκιμές στην εφαρμογή.
 
 ## 6. Μετάβαση Δεδομένων και Cutover
 
