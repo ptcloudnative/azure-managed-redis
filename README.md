@@ -28,8 +28,8 @@
 
 ### Ρόλοι και Όρια Ευθύνης
 
-- **Από εμάς:** δημιουργία των AMR, μετάβαση δεδομένων, ενσωμάτωση Private Endpoint, VNet και DNS.
-- **Από την ομάδα των caches / τον πελάτη:** ενημέρωση του application configuration στο νέο AMR endpoint και διαγραφή του παλιού cache μετά από επιτυχή δοκιμή.
+- **Από εμάς:** δημιουργία των AMR, μετάβαση δεδομένων, ενσωμάτωση Private Endpoint, VNet, DNS και διαγραφή του παλιού cache μετά από επιτυχή δοκιμή.
+- **Από την ομάδα της Cyta:** ενημέρωση του application configuration στο νέο AMR endpoint.
 
 ## 2. Επισκόπηση Azure Managed Redis
 
