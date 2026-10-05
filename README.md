@@ -131,22 +131,3 @@ $$\text{απαιτούμενη συνολική μνήμη AMR} = \frac{\text{pe
 | Programmatic copy | Ειδικά ή μεγάλα datasets | Κόστος εργαλείων και reconciliation |
 
 Το built-in migration tooling (preview) δεν μεταφέρει δεδομένα και δεν υποστηρίζει Private Endpoint, επομένως δεν χρησιμοποιείται ως βασική μέθοδος.
-
-## 7. Πλάνο Υλοποίησης
-
-### Ακολουθία Ανά Περιβάλλον
-
-Test → Dev → QA → πρώτο Production → δεύτερο Production, όπως στα κύματα της ενότητας 1.
-
-### Κριτήρια Δοκιμών και Αποδοχής
-
-- Επιτυχής σύνδεση TLS με Entra authentication από κάθε workload.
-- Επιτυχής regression/integration suite στο νέο endpoint.
-- Ολοκληρωμένη συμφωνία δεδομένων (count, samples, TTL, business invariants).
-
-### Επόμενα Βήματα και Απαιτούμενες Αποφάσεις
-
-- Οριστικοποίηση των caches που θα μεταφερθούν.
-- Μέτρηση peak `used_memory`, fragmentation, evictions, throughput και connections για τελική διαστασιολόγηση.
-- Επιλογή clustering policy, modules και persistence πριν τη δημιουργία.
-- Επιλογή μεθόδου μετάβασης δεδομένων ανά cache και συμφωνία rollback window.
