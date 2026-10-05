@@ -54,10 +54,10 @@
 
 ```mermaid
 flowchart LR
-    A[Εφαρμογή: App Service / AKS / VM] --> B[Private DNS zone]
-    B --> C[Private Endpoint]
-    C --> D[Azure Managed Redis]
-    E[On-premises DNS forwarder] --> B
+    A["Εφαρμογή (App Service, AKS, VM)"] --> B["Private DNS zone"]
+    B --> C["Private Endpoint"]
+    C --> D["Azure Managed Redis"]
+    E["On-premises DNS forwarder"] --> B
 ```
 
 ## 3. Διαστασιολόγηση, Διαθεσιμότητα και Clustering
