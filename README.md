@@ -74,23 +74,6 @@ $$\text{απαιτούμενη συνολική μνήμη AMR} = \frac{\text{pe
 | Compute Optimized | Throughput-intensive ή latency-sensitive workloads |
 | Flash Optimized | Πολύ μεγάλα read-heavy datasets· δεν ταιριάζει στα caches των 1/6 GB |
 
-### Υψηλή Διαθεσιμότητα και Πλεονασμός Ζωνών
-
-- HA υποχρεωτική για QA και Production. Το non-HA επιτρέπεται μόνο για Dev/Test με δεδομένα που ξαναγεμίζουν και δεν έχει SLA.
-- Σε περιοχές με Availability Zones, το HA AMR είναι zone-redundant by default.
-- Το zone redundancy δεν αντικαθιστά τα client retries ούτε το regional DR.
-- Τα υφιστάμενα caches είναι όλα στο West Europe· το geo-replication είναι ξεχωριστή πρωτοβουλία DR.
-
-### Πολιτικές OSS, Enterprise και Nonclustered
-
-| Πολιτική | Πότε επιλέγεται | Κρίσιμη επίπτωση |
-| --- | --- | --- |
-| OSS clustering | Default για cluster-aware clients | Ο client ακολουθεί `MOVED`· δεν υποστηρίζεται RediSearch |
-| Enterprise clustering | RediSearch ή legacy clients | Ένα proxy endpoint, πιθανό bottleneck |
-| Nonclustered | Μόνο ως εξαίρεση συμβατότητας | Έως 25 GB, χαμηλότερη απόδοση |
-
-Η πολιτική επιλέγεται κατά τη δημιουργία και δεν αλλάζει χωρίς νέο resource. Αρχική επιλογή: OSS clustering.
-
 ## 4. Δίκτυο, Ασφάλεια και Πρόσβαση
 
 ### Ενσωμάτωση Private Endpoint και DNS
