@@ -1,7 +1,5 @@
 # Μετάβαση σε Azure Managed Redis
 
-Παρουσίαση προς την ομάδα που διαχειρίζεται τα Redis caches. Αναλυτικά στοιχεία: [TECHNICAL_MIGRATION_GUIDE.md](TECHNICAL_MIGRATION_GUIDE.md) και φάκελος [redis-caches](redis-caches/).
-
 ## 1. Πεδίο και Στόχοι της Μετάβασης
 
 Στόχος είναι η μετάβαση των Azure Cache for Redis (Standard και Premium) σε Azure Managed Redis (AMR), στην περιοχή West Europe. Η τελική λίστα των caches προς μετάβαση δεν έχει οριστικοποιηθεί και μπορεί να περιλαμβάνει λιγότερα από 7 instances.
