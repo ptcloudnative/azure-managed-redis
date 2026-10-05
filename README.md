@@ -127,19 +127,6 @@ $$\text{απαιτούμενη συνολική μνήμη AMR} = \frac{\text{pe
 
 Το built-in migration tooling (preview) δεν μεταφέρει δεδομένα και δεν υποστηρίζει Private Endpoint, επομένως δεν χρησιμοποιείται ως βασική μέθοδος.
 
-### Επικύρωση και Συμφωνία Δεδομένων
-
-- Σύγκριση key count, δειγμάτων τιμών και κατανομής TTL.
-- Έλεγχος business invariants, σφαλμάτων εντολών και p95/p99 latency.
-- Δοκιμή reconnect και failover συμπεριφοράς με αντιπροσωπευτικά δεδομένα και φόρτο.
-
-### Προσέγγιση Cutover και Rollback
-
-1. Write freeze ή idempotent dual write για την κάλυψη των writes μετά το snapshot.
-2. Σταδιακή μεταφορά των reads και αλλαγή του application hostname στο νέο AMR endpoint.
-3. Το παλιό cache παραμένει διαθέσιμο για το συμφωνημένο rollback window.
-4. Διαγραφή του παλιού cache από τον πελάτη μετά από επιτυχή δοκιμή.
-
 ## 7. Πλάνο Υλοποίησης
 
 ### Ακολουθία Ανά Περιβάλλον
