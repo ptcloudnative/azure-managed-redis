@@ -87,13 +87,11 @@ $$\text{απαιτούμενη συνολική μνήμη AMR} = \frac{\text{pe
 
 - Μόνο TLS (1.2 και 1.3), θύρα 10000. Δεν υπάρχει ταυτόχρονη λειτουργία TLS και non-TLS.
 - Στόχος: Microsoft Entra ID με managed identities. Τα access keys μόνο ως μεταβατική λύση.
-- Δεν αποθηκεύονται keys ή tokens σε αρχεία markdown ή Git.
 
 ### Απαιτήσεις Συνδεσιμότητας των Clients
 
 - Νέο hostname, θύρα 10000, νέο key ή Entra token και νέα διαδρομή DNS.
 - Χρήση DNS hostname, ποτέ στατικής IP.
-- Connection pooling και retry με jitter για σύντομα reconnect blips σε scaling/failover.
 
 ## 5. Συμβατότητα Εφαρμογών
 
