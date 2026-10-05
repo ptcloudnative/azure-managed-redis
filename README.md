@@ -26,8 +26,6 @@
 | 4 | `redis-cytaweb-premium-prod` | Balanced B5, HA |
 | 5 | `redis-cytaweb-prod-we-01` | Balanced B5, HA |
 
-Τα B1/B5 είναι αρχικές προτάσεις και όχι εγγύηση διαστασιολόγησης.
-
 ### Ρόλοι και Όρια Ευθύνης
 
 - **Από εμάς:** δημιουργία των AMR, μετάβαση δεδομένων, ενσωμάτωση Private Endpoint, VNet και DNS.
