@@ -119,6 +119,19 @@ $$\text{απαιτούμενη συνολική μνήμη AMR} = \frac{\text{pe
 
 Οι νέες δυνατότητες είναι προαιρετικές και ενεργοποιούνται μόνο μετά από δοκιμές στην εφαρμογή.
 
+### Redis Modules
+
+Τα modules επεκτείνουν το Redis με επιπλέον δομές δεδομένων και λειτουργίες. Επιλέγονται μόνο κατά τη δημιουργία του AMR και δεν μπορούν να προστεθούν ή να αφαιρεθούν αργότερα. Δεν υπάρχει ξεχωριστή χρέωση ανά module στην τεκμηρίωση, αλλά καταναλώνουν μνήμη και CPU.
+
+| Module | Τι κάνει | Παράδειγμα χρήσης | Περιορισμοί |
+| --- | --- | --- | --- |
+| RedisJSON | Αποθηκεύει και ενημερώνει έγγραφα JSON, με πρόσβαση σε επιμέρους πεδία χωρίς ανάγνωση ολόκληρου του αντικειμένου. | Προφίλ χρηστών, καταλόγος προϊόντων | Διαθέσιμο σε όλα τα tiers, συμπεριλαμβανομένου του Flash Optimized. |
+| RediSearch | Ευρετήρια και αναζήτηση: full-text, πολλαπλά πεδία, aggregations και vector similarity (KNN). | Αναζήτηση προϊόντων, vector search για AI | Απαιτεί clustering policy `Enterprise` και eviction policy `NoEviction`. Δεν υποστηρίζεται στο Flash Optimized. |
+| RedisBloom | Πιθανοτικές δομές (Bloom/Cuckoo filter, Count-min sketch, Top-k) με μικρή μνήμη και μικρή ανακρίβεια. | Έλεγχος αν έχει σταλεί ήδη email, κορυφαία στοιχεία σε stream | Δεν υποστηρίζεται στο Flash Optimized ή με active geo-replication. |
+| RedisTimeSeries | Χρονοσειρές υψηλής εισροής, με aggregations, downsampling και retention. | IoT telemetry, monitoring | Δεν υποστηρίζεται στο Flash Optimized ή με active geo-replication. |
+
+Ο προεπιλεγμένος σχεδιασμός για τα caches μας είναι χωρίς modules, εκτός αν τεκμηριωθεί use case πριν τη δημιουργία.
+
 ## 6. Μετάβαση Δεδομένων και Cutover
 
 ### Επιλογές Στρατηγικής Μετάβασης
@@ -131,3 +144,70 @@ $$\text{απαιτούμενη συνολική μνήμη AMR} = \frac{\text{pe
 | Programmatic copy | Ειδικά ή μεγάλα datasets | Κόστος εργαλείων και reconciliation |
 
 Το built-in migration tooling (preview) δεν μεταφέρει δεδομένα και δεν υποστηρίζει Private Endpoint, επομένως δεν χρησιμοποιείται ως βασική μέθοδος.
+
+## 7. Πλάνο Υλοποίησης
+
+### Ακολουθία Ανά Περιβάλλον
+
+Test → Dev → QA → πρώτο Production → δεύτερο Production, όπως στα κύματα της ενότητας 1.
+
+### Φάσεις Υλοποίησης
+
+Οι φάσεις εκτελούνται ανά κύμα. Δεν ξεκινά η επόμενη φάση χωρίς ολοκλήρωση των κριτηρίων εξόδου της προηγούμενης.
+
+```mermaid
+flowchart LR
+    P1["Φάση 1: Νέο AMR και δίκτυο"] --> P2["Φάση 2: Δεδομένα και εφαρμογές"]
+    P2 --> P3["Φάση 3: Παύση παλιού cache"]
+```
+
+#### Φάση 1: Δημιουργία AMR και Δικτύωση
+
+**1.1 Δημιουργία νέου Azure Managed Redis**
+
+1. Τελική διαστασιολόγηση μνήμης και επιλογή tier.
+2. Επιλογή modules και persistence, που δεν αλλάζουν μετά τη δημιουργία.
+3. Δημιουργία στην West Europe, με `publicNetworkAccess` απενεργοποιημένο, HA στα QA/Production.
+
+**1.2 Ρύθμιση δικτύου (Private Endpoint, firewall, routes)**
+
+| Στοιχείο | Ενέργεια |
+| --- | --- |
+| Private Endpoint | Ένα ανά AMR, στο subnet των Private Endpoints, για το sub-resource `redisEnterprise`, με auto-approval. |
+| Private DNS | Zone `privatelink.redis.azure.net`, με DNS zone group στο Private Endpoint και σύνδεση (VNet link) σε όλα τα VNets των εφαρμογών και των on-premises DNS forwarders. |
+| Firewall / NSG | Το AMR δεν έχει IP firewall rules. Επιτρέπεται TCP 10000 από τα subnets των εφαρμογών προς το subnet του Private Endpoint, ενώ το υπόλοιπο traffic απορρίπτεται. Αφαιρούνται οι κανόνες για τις θύρες 6379/6380 του παλιού cache μόνο στη Φάση 3. |
+| Routes (UDR) | Αν το traffic περνά από Azure Firewall ή NVA, ενεργοποιούνται τα network policies του subnet του Private Endpoint και προστίθεται route /32 προς το Private Endpoint, ώστε να υπάρχει συμμετρική διαδρομή. Διαφορετικά δεν απαιτούνται custom routes. |
+
+**Κριτήρια εξόδου Φάσης 1**
+
+- Το AMR είναι σε κατάσταση `Running` και το Private Endpoint σε `Approved`.
+- Από κάθε subnet εφαρμογής, το `<name>.<region>.redis.azure.net` επιλύεται σε private IP.
+- Επιτυχής σύνδεση TLS στη θύρα 10000 (`PING`) με Entra token.
+
+#### Φάση 2: Μετάβαση Δεδομένων και Ενημέρωση Εφαρμογών
+
+**2.1 Μετάβαση δεδομένων (αν χρειάζεται)**
+
+| Κατάσταση | Ενέργεια |
+| --- | --- |
+| Cache-aside, τα δεδομένα ξαναγεμίζουν | Χωρίς μεταφορά, cold start με cache warming. Προτείνεται για Test, Dev και QA. |
+| Τα δεδομένα πρέπει να διατηρηθούν | RDB export του παλιού cache (Premium) σε Storage account και import στο AMR. Τα writes μετά το export χάνονται, άρα γίνεται σε παράθυρο χαμηλής κίνησης ή με παύση των writes. |
+
+Πριν τη μεταφορά ελέγχεται ότι δεν χρησιμοποιούνται logical databases πέραν του 0.
+
+**Κριτήρια εξόδου Φάσης 2**
+
+- Όλα τα workloads συνδέονται στο νέο endpoint χωρίς σφάλματα.
+- Μηδενική κίνηση (connections και commands) στο παλιό cache για τον συμφωνημένο χρόνο παρατήρησης.
+
+#### Φάση 3: Παύση του Παλιού Cache
+
+1. **Rollback window:** το παλιό cache μένει ενεργό και read-only/αδρανές για τον συμφωνημένο χρόνο (προτείνεται 1 εβδομάδα στα Production), ώστε να υπάρχει δυνατότητα επιστροφής με απλή αλλαγή configuration.
+2. **Διαγραφή** του παλιού cache και του Private Endpoint του, αφού επιβεβαιωθεί γραπτά από την ομάδα της Cyta.
+3. **Καθαρισμός δικτύου:** αφαίρεση των εγγραφών `privatelink.redis.cache.windows.net`, των NSG/firewall κανόνων για τις θύρες 6379/6380 και των παλιών secrets στο Key Vault.
+
+**Κριτήρια εξόδου Φάσης 3**
+
+- Το παλιό cache και τα εξαρτώμενα resources έχουν διαγραφεί.
+- Δεν υπάρχουν alerts ή σφάλματα εφαρμογών για το rollback window.
+

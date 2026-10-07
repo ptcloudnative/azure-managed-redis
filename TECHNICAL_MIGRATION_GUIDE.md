@@ -185,7 +185,23 @@ TLS κρυπτογραφεί commands, values και credentials στη μετα
 
 Πριν από production cutover, τρέχουμε integration/regression suite στο target AMR με representative data και load. Συγκρίνουμε key count, sampled values, TTL distribution, command errors, p95/p99 latency, reconnect behavior και business invariants. Νέα Redis 7.4 commands ενεργοποιούνται μόνο μετά από application-level tests και operational runbook.
 
-Το AMR προσφέρει RedisJSON, RedisBloom, RedisTimeSeries και RediSearch. Modules επιλέγονται στην αρχική δημιουργία και δεν ενεργοποιούνται αργότερα. Δεν τα επιλέγουμε χωρίς business/technical use case.
+### 9.2 Redis modules
+
+Το AMR προσφέρει RedisJSON, RedisBloom, RedisTimeSeries και RediSearch. Modules επιλέγονται στην αρχική δημιουργία και δεν ενεργοποιούνται ή αφαιρούνται αργότερα· δεν μπορούν επίσης να φορτωθούν χειροκίνητα custom modules ή να αναβαθμιστεί η έκδοσή τους. Δεν τα επιλέγουμε χωρίς business/technical use case.
+
+| Module | Τι κάνει | Τυπικά use cases | Απαιτήσεις και περιορισμοί |
+| --- | --- | --- | --- |
+| RedisJSON | Native τύπος JSON με πλήρη υποστήριξη του προτύπου: αποθήκευση εγγράφων, path-based ανάγνωση και ενημέρωση επιμέρους πεδίων (αντικείμενα, αριθμοί, arrays, strings) χωρίς σειριοποίηση ολόκληρου του εγγράφου από τον client. Συνδυάζεται με RediSearch για indexing και query πάνω σε JSON. | Προφίλ χρηστών, JSON caching, καταλόγοι προϊόντων | Διαθέσιμο σε Memory Optimized, Balanced, Compute Optimized και Flash Optimized. Συμβατό με active geo-replication. |
+| RediSearch | Real-time search engine και secondary index πάνω σε hashes ή JSON: multi-field queries, aggregations, prefix/fuzzy/phonetic search, auto-complete, geo-filtering, boolean queries και vector similarity (KNN) για AI/embeddings. | Enterprise search, real-time inventory, indexing εξωτερικών βάσεων, vector database | Απαιτεί clustering policy `Enterprise` και eviction policy `NoEviction`: όταν γεμίσει η μνήμη, τα writes αποτυγχάνουν αντί για eviction. Δεν υποστηρίζεται σε Flash Optimized. Συμβατό με active geo-replication. |
+| RedisBloom | Τέσσερις πιθανοτικές δομές που ανταλλάσσουν ακρίβεια με ταχύτητα και μνήμη: Bloom και Cuckoo filter (το στοιχείο σίγουρα δεν υπάρχει ή πιθανώς υπάρχει), Count-min sketch (συχνότητα γεγονότων) και Top-k (τα k πιο συχνά στοιχεία). | Έλεγχος διπλότυπων (π.χ. email που έχει ήδη σταλεί), μέτρηση συχνότητας σε stream | Δεν υποστηρίζεται σε Flash Optimized. Δεν υποστηρίζεται με active geo-replication. |
+| RedisTimeSeries | Δομή χρονοσειρών βελτιστοποιημένη για μεγάλο όγκο εισερχόμενων δεδομένων: aggregated queries (avg, max, standard deviation), time-range queries, downsampling, labels για secondary indexing και ρυθμιζόμενο retention. | IoT telemetry, application monitoring, anomaly detection | Δεν υποστηρίζεται σε Flash Optimized. Δεν υποστηρίζεται με active geo-replication. |
+
+Σημειώσεις:
+
+- Δεν υπάρχει ξεχωριστή χρέωση ανά module στην τεκμηρίωση, αλλά τα δεδομένα και οι δείκτες καταναλώνουν μνήμη και CPU και επηρεάζουν τη διαστασιολόγηση (ενότητα 4). Η τιμή επιβεβαιώνεται στο Azure pricing calculator.
+- Η υποστήριξη κάθε client library διαφέρει ανά module· ελέγχεται πριν την επιλογή.
+- Η παράμετροι module (π.χ. `ERROR_RATE`, `INITIAL_SIZE` του RedisBloom) ορίζονται μέσω `args` στο management API, CLI ή PowerShell. Η εντολή `FT.CONFIG` δεν υποστηρίζεται.
+- Τα legacy caches δεν χρησιμοποιούν modules, επομένως η προεπιλογή για όλα τα κύματα είναι χωρίς modules και με OSS clustering.
 
 ## 10. Persistence και data classification
 
