@@ -39,13 +39,6 @@ flowchart LR
     E --> F[Deprovision old Redis cache after successful testing]
 ```
 
-### Επόμενα στάδια από τον πελάτη
-
-6. Ο πελάτης ενημερώνει το application configuration ώστε οι εφαρμογές να χρησιμοποιούν το νέο AMR endpoint.
-7. Μετά από επιτυχή testing του πελάτη, ο πελάτης κάνει deprovision το παλιό Redis cache.
-
-Τα στάδια 6 και 7 εκτελούνται από τον πελάτη και δεν περιλαμβάνονται στο δικό μας scope.
-
 Τα B1/B5 είναι οι προτεινόμενες αρχικές διαμορφώσεις των resources.
 
 ## 3. Γιατί AMR
