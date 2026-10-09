@@ -36,7 +36,7 @@ flowchart LR
     B --> C[Private Endpoint και DNS]
     C --> D[Data import]
     D --> E[Client: application configuration for new AMR endpoint]
-    E --> F[Client: deprovision old Redis cache after successful testing]
+    E --> F[Deprovision old Redis cache after successful testing]
 ```
 
 ### Επόμενα στάδια από τον πελάτη
