@@ -172,8 +172,8 @@ flowchart LR
 
 | Στοιχείο | Ενέργεια |
 | --- | --- |
-| Private Endpoint | Ένα ανά AMR, στο subnet των Private Endpoints, για το sub-resource `redisEnterprise`, με auto-approval. |
-| Private DNS | Zone `privatelink.redis.azure.net`, με DNS zone group στο Private Endpoint και σύνδεση (VNet link) σε όλα τα VNets των εφαρμογών και των on-premises DNS forwarders. |
+| Private Endpoint | Ένα ανά AMR, στο subnet των Private Endpoints. |
+| Private DNS | Zone `privatelink.redis.azure.net`, με DNS zone group στο Private Endpoint και σύνδεση (VNet link) σε όλα τα VNets των εφαρμογών. |
 | Firewall / NSG | Το AMR δεν έχει IP firewall rules. Επιτρέπεται TCP 10000 από τα subnets των εφαρμογών προς το subnet του Private Endpoint, ενώ το υπόλοιπο traffic απορρίπτεται. Αφαιρούνται οι κανόνες για τις θύρες 6379/6380 του παλιού cache μόνο στη Φάση 3. |
 | Routes (UDR) | Αν το traffic περνά από Azure Firewall ή NVA, ενεργοποιούνται τα network policies του subnet του Private Endpoint και προστίθεται route /32 προς το Private Endpoint, ώστε να υπάρχει συμμετρική διαδρομή. Διαφορετικά δεν απαιτούνται custom routes. |
 
