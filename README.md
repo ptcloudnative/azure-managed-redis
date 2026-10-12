@@ -104,7 +104,6 @@ $$\text{απαιτούμενη συνολική μνήμη AMR} = \frac{\text{pe
 - **Keyspace notifications:** δεν υποστηρίζονται· αντικαθίστανται από application events, queues ή scheduler.
 - **Manual reboot:** δεν υποστηρίζεται.
 - **Multi-key εντολές, Lua και `MULTI/EXEC` (OSS clustering):** τα keys πρέπει να είναι στο ίδιο hash slot, π.χ. `{customer:42}:profile`.
-- **Client library:** απαιτείται υποστήριξη TLS, αυτόματου reconnect, Redis Cluster API και `MOVED` redirects.
 - **Δίκτυο:** δεν υποστηρίζονται VNet injection και IP-based firewall rules· η πρόσβαση γίνεται μέσω Private Endpoint.
 
 ### Νέες δυνατότητες που μπορούμε να χρησιμοποιήσουμε
